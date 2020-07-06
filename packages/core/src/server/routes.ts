@@ -21,6 +21,15 @@ export const install = (
   });
 
   server.route({
+    method: 'GET',
+    path: '/networkStats',
+    handler: function (request, h) {
+
+      return 'Hello World!';
+    }
+  });
+
+  server.route({
     method: "POST",
     path: "/events/{id}",
     options: {

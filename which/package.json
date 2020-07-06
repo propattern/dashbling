@@ -1,0 +1,22 @@
+{
+  "name": "cdd-dashboard",
+  "version": "1.0.0",
+  "main": "index.js",
+  "private": true,
+  "scripts": {
+    "start": "dashbling start",
+    "build": "dashbling compile"
+  },
+  "browserslist": "last 2 versions",
+  "devDependencies": {
+    "@dashbling/build-support": "^0"
+  },
+  "dependencies": {
+    "@dashbling/client": "^0",
+    "@dashbling/core": "^0",
+    "classnames": "^2.2.6",
+    "dashbling-widget-weather": "^2.0.0",
+    "react": "^16.2",
+    "react-dom": "^16.2"
+  }
+}

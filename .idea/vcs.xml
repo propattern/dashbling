@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="VcsDirectoryMappings">
+    <mapping directory="" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/cdd-dashboard" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/cdddashboard" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/which" vcs="Git" />
+  </component>
+</project>

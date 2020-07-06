@@ -1,0 +1,35 @@
+
+$base-widget-size: 300px;
+
+.dashboard {
+  width: 100vw;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+.metaContainer {
+  margin: auto 1em 1em;
+}
+
+.widgetContainer {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 0.5em;
+}
+
+.widget {
+  flex: 1 1 $base-widget-size;
+  min-width: $base-widget-size;
+  min-height: $base-widget-size;
+
+  padding: 0.75em;
+  margin: 0.5em;
+  color: #fff;
+  word-wrap: break-word;
+  hyphens: auto;
+
+  position: relative;
+  color: #000;
+  paddingLeft: '0.5em'
+}
+
