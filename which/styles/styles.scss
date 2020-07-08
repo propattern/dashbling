@@ -1,0 +1,47 @@
+.widget__ping {
+  background-color: #a7bda7;
+
+  .widget__value {
+    font-size: 5rem;
+    text-align: left;
+  }
+}
+
+.widget__ping--ill {
+  background-color: #f42a2a;
+}
+
+.widget__health--heading {
+  background-color: #4cbf55;
+}
+
+.widget__health--build {
+  text-align: left;
+}
+
+.widget__network--error {
+  background-color: #ffe414;
+;
+}
+
+.widget__ping--list {
+  //font-size: .8rem;
+  font-weight: bold;
+  text-align: left;
+
+  .flashing {
+    font-weight: bold;
+    animation: blinker 1s linear infinite;
+  }
+  @keyframes blinker {
+    50% {
+      opacity: 0;
+    }
+  }
+}
+
+.widget__network--label {
+  color: white;
+  padding: 8px;
+  text-align: left;
+}

@@ -1,0 +1,101 @@
+const { createFileHistory } = require("@dashbling/core/history");
+const eventHistoryPath = require("path").join(
+  process.cwd(),
+  "dashbling-events"
+);
+
+module.exports = {
+  webpackConfig: config => {
+    // return modified config
+    // or even completely custom config.
+    //
+    // Example:
+    // config.module.rules.push({
+    //   test: /\.jpg$/,
+    //   loader: "file-loader"
+    // });
+    return config;
+  },
+  onStart: sendEvent => {
+    // start custom code that sends events here,
+    // for example listen to streams etc.
+  },
+  configureServer: async hapiServer => {
+    // Configure the Hapi server here.
+    // See https://hapijs.com/api/17.1.1 docs for details.
+    // This is only needed for more advanced use cases.
+    hapiServer.route({
+      method: "GET",
+      path: "/ping",
+      handler: (_request, _h) => {
+        return "pong";
+      }
+    });
+  },
+  eventHistory: createFileHistory(eventHistoryPath),
+  forceHttps: false,
+  jobs: [
+    {
+      schedule: "*/5 * * * *",
+      fn: require("./jobs/githubStars")(
+        "pascalw/dashbling",
+        "github-stars-dashbling"
+      )
+    },
+    {
+      schedule: "* * * * *",
+      fn: require("./jobs/healthCheck.js")(
+        process.env.HEALTHSTATUS_LOCAL,
+        process.env.ENVHEALTH_LOCAL,
+        "local-health-check"
+      )
+    },
+    {
+      schedule: "* * * * *",
+      fn: require("./jobs/healthCheck.js")(
+        process.env.HEALTHSTATUS_DEV,
+        process.env.ENVHEALTH_DEV,
+        "dev-health-check"
+      )
+    },
+    {
+      schedule: "* * * * *",
+      fn: require("./jobs/healthCheck.js")(
+        process.env.HEALTHSTATUS_TEST,
+        process.env.ENVHEALTH_TEST,
+        "test-health-check"
+      )
+    },
+    {
+      schedule: "* * * * *",
+      fn: require("./jobs/healthCheck.js")(
+        process.env.HEALTHSTATUS_PREPROD,
+        process.env.ENVHEALTH_PREPROD,
+        "preprod-health-check"
+      )
+    },
+    {
+      schedule: "* * * * *",
+      fn: require("./jobs/healthCheck.js")(
+        process.env.HEALTHSTATUS_PROD,
+        process.env.ENVHEALTH_PROD,
+        "prod-health-check"
+      )
+    },
+    {
+      schedule: "*/5 * * * *",
+      fn: require("./jobs/circleBuildStatus")(
+        "github/pascalw/dashbling",
+        "dashbling-ci-status"
+      )
+    },
+    {
+      schedule: "*/30 * * * *",
+      fn: require("dashbling-widget-weather/job")(
+        "weather-amsterdam",
+        process.env.OPEN_WEATHER_MAP_APP_ID,
+        "2759794"
+      )
+    }
+  ]
+};
