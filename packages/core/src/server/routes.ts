@@ -1,13 +1,39 @@
-import { PassThrough } from "stream";
-import { EventBus } from "../lib/eventBus";
-import { Event } from "../lib/Event";
-import { ClientConfig } from "../lib/clientConfig";
+import {PassThrough} from "stream";
+import {EventBus} from "../lib/eventBus";
+import {Event} from "../lib/Event";
+import {ClientConfig} from "../lib/clientConfig";
+import {Request, ResponseToolkit, Server} from "@hapi/hapi";
+
 const { heartbeat } = require("../lib/constants");
-import { Server, Request, ResponseToolkit } from "@hapi/hapi";
+const AWS = require('aws-sdk')
+
 
 interface PassThroughWithHeaders extends PassThrough {
   headers: { [key: string]: string };
 }
+
+AWS.config.update({
+  region: process.env.AWS_DEFAULT_REGION,
+  credentials: {
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
+  },
+  apiVersions: {
+    s3: '2006-03-01',
+  },
+})
+
+const ebsHealthCheck = async (environmentName: string) => {
+  const ebs = new AWS.ElasticBeanstalk()
+  const params ={
+    AttributeNames: [
+      "All"
+    ],
+    EnvironmentName: environmentName
+  };
+  return await ebs.describeEnvironmentHealth(params).promise()
+  // return await ebs.describeInstancesHealth(params).promise()
+};
 
 export const install = (
   server: Server,
@@ -18,6 +44,18 @@ export const install = (
     method: "GET",
     path: "/events",
     handler: streamEventsHandler(eventBus)
+  });
+
+  server.route({
+    method: 'GET',
+    path: '/aws/health/{env}',
+    handler:  function (request, h) {
+      try {
+        return ebsHealthCheck(request.params.env)
+      } catch (e) {
+        console.log(111, e)
+      }
+    }
   });
 
   server.route({
